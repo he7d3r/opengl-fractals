@@ -5,8 +5,8 @@ CPP  = g++.exe -D__DEBUG__
 CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
 RES  = TESTES~1_private.res
-OBJ  = Fractal.o $(RES)
-LINKOBJ  = Fractal.o $(RES)
+OBJ  = "../../../../Arquivos de programas/Dev-Cpp/Projetos/Fractal 3d - Piramide Sierpinsk 02/Fractal.o" $(RES)
+LINKOBJ  = "../../../../Arquivos de programas/Dev-Cpp/Projetos/Fractal 3d - Piramide Sierpinsk 02/Fractal.o" $(RES)
 LIBS =  -L"C:/Arquivos de programas/Dev-Cpp/lib" -mwindows -lopengl32 -lglut32 -lglu32 
 INCS =  -I"C:/Arquivos de programas/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Arquivos de programas/Dev-Cpp/include/c++"  -I"C:/Arquivos de programas/Dev-Cpp/include/c++/mingw32"  -I"C:/Arquivos de programas/Dev-Cpp/include/c++/backward"  -I"C:/Arquivos de programas/Dev-Cpp/include" 
@@ -25,8 +25,8 @@ clean: clean-custom
 $(BIN): $(LINKOBJ)
 	$(CPP) $(LINKOBJ) -o "Fract3d.exe" $(LIBS)
 
-Fractal.o: Fractal.cpp
-	$(CPP) -c Fractal.cpp -o Fractal.o $(CXXFLAGS)
+"../../../../Arquivos de programas/Dev-Cpp/Projetos/Fractal 3d - Piramide Sierpinsk 02/Fractal.o": ../../../../Arquivos\ de\ programas/Dev-Cpp/Projetos/Fractal\ 3d\ -\ Piramide\ Sierpinsk\ 02/Fractal.cpp
+	$(CPP) -c "../../../../Arquivos de programas/Dev-Cpp/Projetos/Fractal 3d - Piramide Sierpinsk 02/Fractal.cpp" -o "../../../../Arquivos de programas/Dev-Cpp/Projetos/Fractal 3d - Piramide Sierpinsk 02/Fractal.o" $(CXXFLAGS)
 
 TESTES~1_private.res: TESTES~1_private.rc 
 	$(WINDRES) -i TESTES~1_private.rc -I rc -o TESTES~1_private.res -O coff 

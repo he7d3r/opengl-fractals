@@ -65,11 +65,11 @@ const int POS=3;
 const GLfloat reset[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
 GLfloat p[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
 
-const int MAX_SORT=100000; 
+const int MAX_SORT=10000; 
 const int MAX_VERT=4;
 int v_sort[MAX_SORT];
 
-void Sorteia_pontos (){
+void Sorteia_pontos (){ 
  for (int c=0;c<MAX_SORT;c++)
   v_sort[c]=(int)rand()%MAX_VERT;
 }
