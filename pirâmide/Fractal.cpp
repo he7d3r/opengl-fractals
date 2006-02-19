@@ -58,22 +58,18 @@ GLfloat Cor[8][3]={
 const int MAX_PARAM=4;
 
 const int INC=0;
-const int RAZAO=1;
-const int POS=2;
-const int DIST=3;
+const int DIST=1;
+const int RAZAO=2;
+const int POS=3;
 
-GLfloat p[MAX_PARAM]={0.1,//INC
-                      0.5,//RAZAO
-                      1.0,//POS
-                      pr_cam_dist};//DIST. da camera
+const GLfloat reset[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
+GLfloat p[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
 
-const int MAX_SORT=10000; 
+const int MAX_SORT=100000; 
 const int MAX_VERT=4;
 int v_sort[MAX_SORT];
 
-const GLdouble TAM=3.0; //glutSolidCube(TAM);
-
-void Sorteia_pontos (){ 
+void Sorteia_pontos (){
  for (int c=0;c<MAX_SORT;c++)
   v_sort[c]=(int)rand()%MAX_VERT;
 }
@@ -136,11 +132,6 @@ void Exibe(){
  const GLdouble CAM_Y = pr_c_y + p[DIST] * sin(PHI) * sin(THETA);
  const GLdouble CAM_Z = pr_c_z + p[DIST] * cos(PHI);
  GLdouble prof=(pr_pers_prox+pr_pers_dist)/2;
- 
- /*GLfloat espec[]={0.5, 0.5, 0.5, 1.0};
- GLfloat emi[]={0.3, 0.6, 0.0, 0.0};
- GLfloat emi2[]={0.5, 0.0, 0.3, 0.0};
- GLfloat emi3[]={0.0, 0.0, 0.2, 0.0};*/
  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); 
   
@@ -217,8 +208,7 @@ Exemplos:
 }
 void Teclado(unsigned char key, int x, int y)
 {
- static int p_atual=DIST;
- const GLfloat reset[MAX_PARAM]={0.1,0.5,1.0,pr_cam_dist};
+ static int p_atual=DIST; 
  
  if (48<=key && key<=57){
   p_atual=(key-48)<MAX_PARAM?key-48:DIST;

@@ -5,11 +5,11 @@
 #define TESTES~1_PRIVATE_H
 
 // VERSION DEFINITIONS
-#define VER_STRING	"0.1.2.900"
+#define VER_STRING	"0.1.2.908"
 #define VER_MAJOR	0
 #define VER_MINOR	1
 #define VER_RELEASE	2
-#define VER_BUILD	900
+#define VER_BUILD	908
 #define COMPANY_NAME	""
 #define FILE_VERSION	""
 #define FILE_DESCRIPTION	"Desenvolvido por Helder Geovane Gomes de Lima, utilizando Dev-C++ IDE"
