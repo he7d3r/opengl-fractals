@@ -1,3 +1,6 @@
+# Other
+*.res
+
 # Prerequisites
 *.d
 
@@ -12,11 +15,19 @@
 *.map
 *.exp
 
+# Compiled Object files
+*.slo
+
+
 # Precompiled Headers
 *.gch
 *.pch
 
-# Libraries
+# Fortran module files
+*.smod
+
+# Compiled Static libraries
+*.lai
 *.lib
 *.a
 *.la
