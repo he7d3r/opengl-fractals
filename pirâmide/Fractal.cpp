@@ -9,7 +9,7 @@
 //Tipo de projeção
 const int PROJ_ORTO = 1;
 const int PROJ_PERS = 2;
-int tipo_proj = PROJ_PERS;
+int tipo_proj = 2;
 
 //Outras constantes
 const GLfloat DEG     = M_PI/180;
@@ -54,77 +54,72 @@ GLfloat Cor[8][3]={
 {  1.0*Brilho,  1.0*Brilho,  1.0*Brilho}  //[7]-Branco
 };
 
-//Deste ponto em diante, modifique de acordo com o projeto atual
+//Aqui começam as declarações específicas deste projeto
+const int MAX_PARAM=4;
+
 const int INC=0;
-const int DIST=1;
-const int TAM=2;
-const int N_ETAPAS=3;
+const int RAZAO=1;
+const int POS=2;
+const int DIST=3;
 
-const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={0.1,pr_cam_dist,0.01,7};
-GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
+GLfloat p[MAX_PARAM]={0.1,//INC
+                      0.5,//RAZAO
+                      1.0,//POS
+                      pr_cam_dist};//DIST. da camera
 
+const int MAX_SORT=10000; 
+const int MAX_VERT=4;
+int v_sort[MAX_SORT];
 
-int F[3][3][3]={{{0,0,0},{0,0,0},{0,0,0}},
-                {{0,0,0},{0,0,0},{0,0,0}},
-                {{0,0,0},{0,0,0},{0,0,0}}};
-int max_x=2;
-int max_y=2;
-int max_z=2;
+const GLdouble TAM=3.0; //glutSolidCube(TAM);
 
-void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
- int i,j,k;
- GLdouble npx,npy,npz;
- 
- for (i=0;i<max_x;i++){
-  for (j=0;j<max_y;j++){
-   for (k=0;k<max_z;k++){
-    if (F[i][j][k])
-    {
-    if (n<p[N_ETAPAS])
-    {
-      npx=px+(GLdouble)i*p[TAM]*pow((GLdouble)max_x,((GLdouble)(p[N_ETAPAS]-n)));
-      npy=py+(GLdouble)j*p[TAM]*pow((GLdouble)max_y,((GLdouble)(p[N_ETAPAS]-n)));
-      npz=pz+(GLdouble)k*p[TAM]*pow((GLdouble)max_z,((GLdouble)(p[N_ETAPAS]-n)));
-      Faz_Etapa(npx,npy,npz,n+1);
-    }else
-    {
-     //glPushMatrix();
-      //glTranslated(px+p[TAM]*i, py+p[TAM]*j,pz+p[TAM]*k);                   
-      //glScalef(1.0,1.0,1.0);
-      //glutSolidCube(p[TAM]);
-      //glBegin(GL_POINTS);
-       glVertex3f(px+p[TAM]*i,py+p[TAM]*j,pz+p[TAM]*k);
-      //glEnd();
-     //glPopMatrix();
-    }//else     
-   }
-   }
+void Sorteia_pontos (){ 
+ for (int c=0;c<MAX_SORT;c++)
+  v_sort[c]=(int)rand()%MAX_VERT;
+}
+
+void Des_PontosAleatorios(){ 
+ int c;
+ GLfloat ult[3]={0.5,0.5,0.5};
+ GLfloat v[4][3]={{0,0,0},{1,0,0},{0,1,0},{1-p[POS],1-p[POS],p[POS]}};
+
+ glBegin(GL_POINTS);
+ for (c=0;c<MAX_SORT;c++){ 
+  if (v_sort[c]!=v_sort[c-1]){ 
+   glColor3f(Cor[1+v_sort[c]][0], Cor[1+v_sort[c]][1], Cor[1+v_sort[c]][2]);
+   /*switch (v_sort[c]){
+   case 0:
+    glColor3f(Cor[C_BRANCO][0], Cor[C_BRANCO][1], Cor[C_BRANCO][2]);break;   
+   case 1:
+    glColor3f(Cor[C_VERMELHO][0], Cor[C_VERMELHO][1], Cor[C_VERMELHO][2]);break;
+   case 2:
+    glColor3f(Cor[C_VERDE][0], Cor[C_VERDE][1], Cor[C_VERDE][2]);break;
+   case 3:
+    glColor3f(Cor[C_CIANO][0], Cor[C_CIANO][1], Cor[C_CIANO][2]);break;
+   }*/
   }
+  ult[0]+=p[RAZAO]*(v[v_sort[c]][0] - ult[0]);
+  ult[1]+=p[RAZAO]*(v[v_sort[c]][1] - ult[1]);
+  ult[2]+=p[RAZAO]*(v[v_sort[c]][2] - ult[2]);
+  glVertex3f(ult[0], ult[1], ult[2]);  
  }
+ glEnd();
 }
 void Des_Objeto(int Tipo){
  glPushMatrix();
  switch (Tipo){
  case 1:
-  //glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-  //glTranslatef(0.5, 0.5, 0.0);
   glBegin(GL_LINES);
-   glColor3f(1.0,0.0,0.0);//x
+   glColor3f(Cor[C_VERMELHO][0],Cor[C_VERMELHO][1],Cor[C_VERMELHO][2]);//x
      glVertex3f(0.0,0.0,0.0); glVertex3f(2,0.0,0.0);
-   glColor3f(0.0,1.0,0.0);//y
+   glColor3f(Cor[C_VERDE][0],Cor[C_VERDE][1],Cor[C_VERDE][2]);//y
      glVertex3f(0.0,0.0,0.0); glVertex3f(0.0,2,0.0);
-   glColor3f(0.0,0.0,1.0);//z
+   glColor3f(Cor[C_AZUL][0],Cor[C_AZUL][1],Cor[C_AZUL][2]);//z
      glVertex3f(0.0,0.0,0.0); glVertex3f(0.0,0.0,2);
-  glEnd();
+  glEnd(); 
   break;
  case 2: 
-  F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
-  glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
-  glTranslated(0.5*p[TAM],0.5*p[TAM],0.5*p[TAM]);
-  glBegin(GL_POINTS);
-   Faz_Etapa(0,0,0,1);//nível 1
-  glEnd();
+  Des_PontosAleatorios();
   break;
  default:
  
@@ -167,22 +162,15 @@ void Exibe(){
    glRotatef(pr_orto_z2,0.0,0.0,1.0);
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
-  }   
+  }  
+  //glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+  
   Des_Objeto(1);
-  
   Des_Objeto(2);
-  
   //glFlush(); 
   glutSwapBuffers();//caso doublebuffered...
  
 }
-/*void Redimensiona(int alt, int larg){
- glViewport (0, 0, (GLsizei) larg, (GLsizei) alt); 
- glMatrixMode(GL_MODELVIEW);
- glLoadIdentity();
- pr_pers_aspec=(GLsizei) larg/(GLsizei) alt;
- gluPerspective (pr_pers_ang, pr_pers_aspec, pr_pers_prox, pr_pers_dist);
-}*/
 
 void Ini()
 {/*Defina aqui os valores iniciais dos parâmetros mais importantes.
@@ -192,12 +180,6 @@ Exemplos:
  Cor do fundo de tela;
  Modelos de Iluminação.
  */ 
- /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
- GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
- GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
- GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
- GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
-
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
  const GLdouble CAM_X = pr_c_x + p[DIST] * sin(PHI) * cos(THETA);
@@ -231,11 +213,12 @@ Exemplos:
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-  //quad=gluNewQuadric(); 
+  Sorteia_pontos();
 }
 void Teclado(unsigned char key, int x, int y)
 {
- static int p_atual=DIST; 
+ static int p_atual=DIST;
+ const GLfloat reset[MAX_PARAM]={0.1,0.5,1.0,pr_cam_dist};
  
  if (48<=key && key<=57){
   p_atual=(key-48)<MAX_PARAM?key-48:DIST;
@@ -361,3 +344,4 @@ int main(int argc, char **argv)
    glutMainLoop();
  return 0;
 }
+
