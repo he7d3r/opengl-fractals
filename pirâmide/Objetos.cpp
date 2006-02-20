@@ -23,12 +23,12 @@ GLdouble pr_orto_z1    =  90.0;
 GLdouble pr_orto_y1    =  45.0;
 GLdouble pr_orto_z2    = 135.0;
 GLdouble pr_pers_ang   =  50.0;
-GLdouble pr_pers_prox  =   1.0;
+GLdouble pr_pers_prox  =   0.1;
 GLdouble pr_pers_dist  = 100.0;
 GLdouble pr_pers_aspec =   1.0;
-GLdouble pr_cam_dist   =   5.0;//coordenadas esféricas//
-GLdouble pr_cam_phi    =  30.0;//angulo em relação a 'z'
-GLdouble pr_cam_theta  =  45.0;//angulo em relação a 'x'
+GLdouble pr_cam_dist   =   2.0;//coordenadas esféricas//
+GLdouble pr_cam_phi    =  60.0;//angulo em relação a 'z'
+GLdouble pr_cam_theta  =  20.0;//angulo em relação a 'x'
 GLdouble pr_direc_z    =   1.0;//valor 'z' indicando o teto da cena
 
 int botao_mouse=-1; //indica qual o botão pressionado
@@ -73,6 +73,40 @@ int max_x=2;
 int max_y=2;
 int max_z=2;
 
+GLUquadric *quad;
+void Des_Base(){
+ const int dv=18;
+ const GLfloat b2=p[TAM]*0.170; //raio do 2º cilindro
+ const GLfloat b1=p[TAM]*0.24;  //raio do 1º cilindro
+ const GLfloat r1=p[TAM]*0.225; //raio da 1ª esfera
+ const GLfloat r2=p[TAM]*0.161; //daio da 2ª esfera
+ const GLfloat mg=p[TAM]*0.04;  //largura das margens
+ const GLfloat a1=p[TAM]*0.21;  //altura da base
+ 
+ gluDisk (quad, 0, b1, dv, 1);
+ gluCylinder(quad, b1, b1, a1, dv, 1);   
+      glTranslatef(0.0,0.0,a1);
+ gluCylinder(quad, b1, a1, mg/2, dv, 1);   
+      glTranslatef(0.0,0.0,0.10*p[TAM]);
+ gluSphere (quad, r1, dv, dv);
+      glTranslatef(0.0,0.0,0.097*p[TAM]);
+ gluDisk (quad, 0, b1, dv, 1);
+ gluCylinder(quad, b1, b1, mg, dv, 1);
+      glTranslatef(0.0,0.0,mg);
+ gluCylinder(quad, b1, 0.17*p[TAM], 0.03*p[TAM], dv, 1);
+      glTranslatef(0.0,0.0,0.03*p[TAM]);
+ gluCylinder(quad, 0.17*p[TAM], 0.13*p[TAM], 0.03*p[TAM], dv, 1);
+      glTranslatef(0.0,0.0,0.03*p[TAM]);
+ gluCylinder(quad, 0.13*p[TAM], 0.09*p[TAM], 0.11*p[TAM], dv, 1);
+      glTranslatef(0.0,0.0,0.11*p[TAM]);
+ gluCylinder(quad, 0.09*p[TAM], b2, mg, dv, 1);
+      glTranslatef(0.0,0.0,mg);   
+ gluCylinder(quad, b2, b2, mg, dv, 1);
+      glTranslatef(0.0,0.0,mg);   
+ gluCylinder(quad, b2, p[TAM]*0.105, mg/2, dv, 1);   
+      glTranslatef(0.0,0.0,0.14*p[TAM]);
+ gluSphere (quad, r2, dv, dv);
+}
 void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
  int i,j,k;
  GLdouble npx,npy,npz;
@@ -90,14 +124,16 @@ void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
       Faz_Etapa(npx,npy,npz,n+1);
     }else
     {
-     //glPushMatrix();
-      //glTranslated(px+p[TAM]*i, py+p[TAM]*j,pz+p[TAM]*k);                   
+     glPushMatrix();
+      glTranslated(px+p[TAM]*i, py+p[TAM]*j,pz+p[TAM]*k);                   
       //glScalef(1.0,1.0,1.0);
       //glutSolidCube(p[TAM]);
+      
+      Des_Base();
       //glBegin(GL_POINTS);
-       glVertex3f(px+p[TAM]*i,py+p[TAM]*j,pz+p[TAM]*k);
+      //glVertex3f(px+p[TAM]*i,py+p[TAM]*j,pz+p[TAM]*k);
       //glEnd();
-     //glPopMatrix();
+     glPopMatrix();
     }//else     
    }
    }
@@ -124,9 +160,9 @@ void Des_Objeto(int Tipo){
   glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
   //glTranslated(0.5*p[TAM],0.5*p[TAM],0.5*p[TAM]);
   glPointSize(p[TAM_PT]);
-  glBegin(GL_POINTS);
+  //glBegin(GL_POINTS);
    Faz_Etapa(0,0,0,1);//nível 1
-  glEnd();
+  //glEnd();
   break;
  default:
  
@@ -170,8 +206,9 @@ void Exibe(){
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }   
+  glDisable (GL_LIGHTING);
   Des_Objeto(1);
-  
+  glEnable (GL_LIGHTING);
   Des_Objeto(2);
   
   //glFlush(); 
@@ -194,11 +231,11 @@ Exemplos:
  Cor do fundo de tela;
  Modelos de Iluminação.
  */ 
- /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
- GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
- GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
- GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
- GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
+    GLfloat ambiente[]={0.2, 0.2, 0.1, 1.0};
+    GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
+    GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
+    GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
+    GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};
 
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
@@ -211,6 +248,17 @@ Exemplos:
                0.1*Cor[C_CIANO][1],
                0.1*Cor[C_CIANO][2],0);
     glEnable (GL_DEPTH_TEST);//Testa os objetos, decidindo qual está na frente.
+    
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambiente);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, difusa);
+    glLightfv(GL_LIGHT0, GL_POSITION, posicao);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, especular);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodelo_ambiente);
+    
+    glShadeModel(GL_FLAT);
+    glEnable (GL_LIGHTING);
+    glEnable (GL_LIGHT0);
+    glEnable (GL_COLOR_MATERIAL);
     
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -233,7 +281,7 @@ Exemplos:
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-  //quad=gluNewQuadric(); 
+  quad=gluNewQuadric(); 
 }
 void Teclado(unsigned char key, int x, int y)
 {
