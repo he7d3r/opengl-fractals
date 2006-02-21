@@ -132,9 +132,9 @@ void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
      glPushMatrix();
       glTranslated(px+p[TAM]*i, py+p[TAM]*j,pz+p[TAM]*k);                   
       //glScalef(1.0,1.0,1.0);
-      glutSolidCube(p[TAM]);
+      //glutSolidCube(p[TAM]);
       
-      //Des_Base();
+      Des_Base();
       //glBegin(GL_POINTS);
       //glVertex3f(px+p[TAM]*i,py+p[TAM]*j,pz+p[TAM]*k);
       //glEnd();
