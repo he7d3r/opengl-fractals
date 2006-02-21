@@ -62,7 +62,7 @@ const int N_ETAPAS=3;
 const int TAM_PT=4;
 
 const int MAX_PARAM=5;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.01,2,2.0};
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.1,1,2.0};
 GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3],reset[4]};
 
 
@@ -125,11 +125,6 @@ void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
       npy=py+(GLdouble)j*p[TAM]*pow((GLdouble)max_y,((GLdouble)(p[N_ETAPAS]-n)));
       npz=pz+(GLdouble)k*p[TAM]*pow((GLdouble)max_z,((GLdouble)(p[N_ETAPAS]-n)));
       
-      if (i+j+k==0)
-       glColor3f(Cor[C_VIOLETA][0],Cor[C_VIOLETA][1],Cor[C_VIOLETA][2]);
-      else
-       glColor3f(Cor[C_CIANO][i],Cor[C_CIANO][j],Cor[C_CIANO][k]);
-       
       Faz_Etapa(npx,npy,npz,n+1);
       
     }else
@@ -169,7 +164,7 @@ void Des_Objeto(int Tipo){
   //F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
   F[1][0][1]=F[0][1][1]=F[1][2][1]=F[2][1][1]=F[1][1][1]=0;
   F[1][1][2]=F[1][1][0]=0;
-  //glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
+  glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
   //glTranslated(0.5*p[TAM],0.5*p[TAM],0.5*p[TAM]);
   glPointSize(p[TAM_PT]);
   //glBegin(GL_POINTS);
