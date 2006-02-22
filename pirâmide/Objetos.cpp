@@ -16,7 +16,7 @@ const GLfloat DEG     = M_PI/180;
 const GLfloat VEL_MOV = 1.0;
 
 //Parametros para alterar a projeção
-GLdouble pr_c_x        =   0.0;//    Este centro é
+GLdouble pr_c_x        =   1.0;//    Este centro é
 GLdouble pr_c_y        =   0.0;//usado   nos  dois
 GLdouble pr_c_z        =   0.0;//tipos de projeção
 GLdouble pr_orto_z1    =  90.0;
@@ -26,9 +26,9 @@ GLdouble pr_pers_ang   =  50.0;
 GLdouble pr_pers_prox  =   0.1;
 GLdouble pr_pers_dist  = 100.0;
 GLdouble pr_pers_aspec =   1.0;
-GLdouble pr_cam_dist   =   2.0;//coordenadas esféricas//
-GLdouble pr_cam_phi    =  60.0;//angulo em relação a 'z'
-GLdouble pr_cam_theta  =  20.0;//angulo em relação a 'x'
+GLdouble pr_cam_dist   =   5.0;//coordenadas esféricas//
+GLdouble pr_cam_phi    =  30.0;//angulo em relação a 'z'
+GLdouble pr_cam_theta  =  45.0;//angulo em relação a 'x'
 GLdouble pr_direc_z    =   1.0;//valor 'z' indicando o teto da cena
 
 int botao_mouse=-1; //indica qual o botão pressionado
@@ -59,86 +59,61 @@ const int INC=0;
 const int DIST=1;
 const int TAM=2;
 const int N_ETAPAS=3;
-const int TAM_PT=4;
 
-const int MAX_PARAM=5;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.1,3,2.0};
-GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3],reset[4]};
+const int MAX_PARAM=4;//número de constantes logo acima
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.01,7};
+GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
 
+#define NUM_TETR_FACES     4
 
-int F[3][3][3]={{{0,0,0},{0,0,0},{0,0,0}},
-                {{0,0,0},{0,0,0},{0,0,0}},
-                {{0,0,0},{0,0,0},{0,0,0}}};
-int max_x=2;
-int max_y=2;
-int max_z=2;
+static GLdouble tet_r[4][3] =
+{ {             1.0,             0.0,             0.0 },
+  { -0.333333333333,  0.942809041582,             0.0 },
+  { -0.333333333333, -0.471404520791,  0.816496580928 },
+  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;
 
-GLUquadric *quad;
-void Des_Base(){
- const int dv=18;
- const GLfloat b2=p[TAM]*0.170; //raio do 2º cilindro
- const GLfloat b1=p[TAM]*0.24;  //raio do 1º cilindro
- const GLfloat r1=p[TAM]*0.225; //raio da 1ª esfera
- const GLfloat r2=p[TAM]*0.161; //daio da 2ª esfera
- const GLfloat mg=p[TAM]*0.04;  //largura das margens
- const GLfloat a1=p[TAM]*0.21;  //altura da base
- 
- gluDisk (quad, 0, b1, dv, 1);
- gluCylinder(quad, b1, b1, a1, dv, 1);   
-      glTranslatef(0.0,0.0,a1);
- gluCylinder(quad, b1, a1, mg/2, dv, 1);   
-      glTranslatef(0.0,0.0,0.10*p[TAM]);
- gluSphere (quad, r1, dv, dv);
-      glTranslatef(0.0,0.0,0.097*p[TAM]);
- gluDisk (quad, 0, b1, dv, 1);
- gluCylinder(quad, b1, b1, mg, dv, 1);
-      glTranslatef(0.0,0.0,mg);
- gluCylinder(quad, b1, 0.17*p[TAM], 0.03*p[TAM], dv, 1);
-      glTranslatef(0.0,0.0,0.03*p[TAM]);
- gluCylinder(quad, 0.17*p[TAM], 0.13*p[TAM], 0.03*p[TAM], dv, 1);
-      glTranslatef(0.0,0.0,0.03*p[TAM]);
- gluCylinder(quad, 0.13*p[TAM], 0.09*p[TAM], 0.11*p[TAM], dv, 1);
-      glTranslatef(0.0,0.0,0.11*p[TAM]);
- gluCylinder(quad, 0.09*p[TAM], b2, mg, dv, 1);
-      glTranslatef(0.0,0.0,mg);   
- gluCylinder(quad, b2, b2, mg, dv, 1);
-      glTranslatef(0.0,0.0,mg);   
- gluCylinder(quad, b2, p[TAM]*0.105, mg/2, dv, 1);   
-      glTranslatef(0.0,0.0,0.14*p[TAM]);
- gluSphere (quad, r2, dv, dv);
-}
-void Faz_Etapa(GLfloat px,GLfloat py,GLfloat pz,GLfloat n){
- int i,j,k;
- GLdouble npx,npy,npz;
- 
- for (i=0;i<max_x;i++){
-  for (j=0;j<max_y;j++){
-   for (k=0;k<max_z;k++){
-    if (F[i][j][k])
+static GLint tet_i[4][3] =  /* Vertex indices */
+{
+  { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
+} ;
+
+void glutWireSierpinskiSponge ( int num_levels, GLdouble offset[3], GLdouble scale )
+{
+  int i, j ;
+
+  //FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutWireSierpinskiSponge" );
+
+  if ( num_levels <= 0 )
+  {
+    if (num_levels<0){num_levels=0;p[N_ETAPAS]=0;}
+    for ( i = 0 ; i < NUM_TETR_FACES ; i++ )
     {
-    if (n<p[N_ETAPAS])
-    {
-      npx=px+(GLdouble)i*p[TAM]*pow((GLdouble)max_x,((GLdouble)(p[N_ETAPAS]-n)));
-      npy=py+(GLdouble)j*p[TAM]*pow((GLdouble)max_y,((GLdouble)(p[N_ETAPAS]-n)));
-      npz=pz+(GLdouble)k*p[TAM]*pow((GLdouble)max_z,((GLdouble)(p[N_ETAPAS]-n)));
-      Faz_Etapa(npx,npy,npz,n+1);
-    }else
-    {
-     glPushMatrix();
-      glTranslated(px+p[TAM]*i, py+p[TAM]*j,pz+p[TAM]*k);                   
-      //glScalef(1.0,1.0,1.0);
-      //glutSolidCube(p[TAM]);
-      
-      Des_Base();
-      //glBegin(GL_POINTS);
-      //glVertex3f(px+p[TAM]*i,py+p[TAM]*j,pz+p[TAM]*k);
-      //glEnd();
-     glPopMatrix();
-    }//else     
-   }
-   }
+      glBegin ( GL_LINE_LOOP ) ;
+      glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
+      for ( j = 0; j < 3; j++ )
+      {
+        double x = offset[0] + scale * tet_r[tet_i[i][j]][0] ;
+        double y = offset[1] + scale * tet_r[tet_i[i][j]][1] ;
+        double z = offset[2] + scale * tet_r[tet_i[i][j]][2] ;
+        glVertex3d ( x, y, z ) ;
+      }
+
+      glEnd () ;
+    }
   }
- }
+  else
+  {
+    GLdouble local_offset[3] ;  /* Use a local variable to avoid buildup of roundoff errors */
+    num_levels -- ;
+    scale /= 2.0 ;
+    for ( i = 0 ; i < NUM_TETR_FACES ; i++ )
+    {
+      local_offset[0] = offset[0] + scale * tet_r[i][0] ;
+      local_offset[1] = offset[1] + scale * tet_r[i][1] ;
+      local_offset[2] = offset[2] + scale * tet_r[i][2] ;
+      glutWireSierpinskiSponge ( num_levels, local_offset, scale ) ;
+    }
+  }
 }
 void Des_Objeto(int Tipo){
  glPushMatrix();
@@ -156,17 +131,12 @@ void Des_Objeto(int Tipo){
   glEnd();
   break;
  case 2: 
-  F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
+  //F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
   glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
-  //glTranslated(0.5*p[TAM],0.5*p[TAM],0.5*p[TAM]);
-  glPointSize(p[TAM_PT]);
-  //glBegin(GL_POINTS);
-   Faz_Etapa(0,0,0,1);//nível 1
-  //glEnd();
+  GLdouble offset[3]={0.0,0.0,0.0};
+  glutWireSierpinskiSponge((int) p[N_ETAPAS],offset,1.0);
   break;
- default:
- 
-  break;
+
  }
  glPopMatrix();
 }
@@ -206,9 +176,8 @@ void Exibe(){
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }   
-  glDisable (GL_LIGHTING);
   Des_Objeto(1);
-  glEnable (GL_LIGHTING);
+  
   Des_Objeto(2);
   
   //glFlush(); 
@@ -231,11 +200,11 @@ Exemplos:
  Cor do fundo de tela;
  Modelos de Iluminação.
  */ 
-    GLfloat ambiente[]={0.2, 0.2, 0.1, 1.0};
-    GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
-    GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
-    GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
-    GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};
+ /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
+ GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
+ GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
+ GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
+ GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
 
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
@@ -248,17 +217,6 @@ Exemplos:
                0.1*Cor[C_CIANO][1],
                0.1*Cor[C_CIANO][2],0);
     glEnable (GL_DEPTH_TEST);//Testa os objetos, decidindo qual está na frente.
-    
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambiente);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, difusa);
-    glLightfv(GL_LIGHT0, GL_POSITION, posicao);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, especular);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodelo_ambiente);
-    
-    glShadeModel(GL_FLAT);
-    glEnable (GL_LIGHTING);
-    glEnable (GL_LIGHT0);
-    glEnable (GL_COLOR_MATERIAL);
     
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -281,7 +239,7 @@ Exemplos:
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-  quad=gluNewQuadric(); 
+  //quad=gluNewQuadric(); 
 }
 void Teclado(unsigned char key, int x, int y)
 {
