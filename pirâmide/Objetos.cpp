@@ -16,7 +16,7 @@ const GLfloat DEG     = M_PI/180;
 const GLfloat VEL_MOV = 1.0;
 
 //Parametros para alterar a projeção
-GLdouble pr_c_x        =   1.0;//    Este centro é
+GLdouble pr_c_x        =   0.0;//    Este centro é
 GLdouble pr_c_y        =   0.0;//usado   nos  dois
 GLdouble pr_c_z        =   0.0;//tipos de projeção
 GLdouble pr_orto_z1    =  90.0;
@@ -133,7 +133,7 @@ void Des_Objeto(int Tipo){
  case 2: 
   //F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
   glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
-  GLdouble offset[3]={0.0,0.0,0.0};
+  GLdouble offset[3]={0.0,0.0,0.0};  
   glutWireSierpinskiSponge((int) p[N_ETAPAS],offset,1.0);
   break;
 
