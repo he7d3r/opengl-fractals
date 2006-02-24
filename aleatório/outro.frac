@@ -1,7 +1,7 @@
-Koch Snowflake Fractal
-Title of window
-"Koch Snowflake"
-Number of transformations
+[*** Fractais gerados por IFS ***]
+[ Abaixo está o título da Janela ]
+Fractais com IFS
+[Número de transformações, seguido dos parâmetros:]
 4
   A00       A01       A10       A11     B0        B1
 0.33333     0.0       0.0     0.33333   0.0       0.0
