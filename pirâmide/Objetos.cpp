@@ -27,8 +27,8 @@ GLdouble pr_pers_prox  =   0.1;
 GLdouble pr_pers_dist  = 100.0;
 GLdouble pr_pers_aspec =   1.0;
 GLdouble pr_cam_dist   =   5.0;//coordenadas esféricas//
-GLdouble pr_cam_phi    =  80.0;//angulo em relação a 'z'
-GLdouble pr_cam_theta  =  5.0;//angulo em relação a 'x'
+GLdouble pr_cam_phi    =  30.0;//angulo em relação a 'z'
+GLdouble pr_cam_theta  =  45.0;//angulo em relação a 'x'
 GLdouble pr_direc_z    =   1.0;//valor 'z' indicando o teto da cena
 
 int botao_mouse=-1; //indica qual o botão pressionado
@@ -61,7 +61,7 @@ const int TAM=2;
 const int N_ETAPAS=3;
 
 const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.01,3};
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.01,7};
 GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
 
 #define NUM_TETR_FACES     4
@@ -77,31 +77,29 @@ static GLint tet_i[4][3] =  /* Vertex indices */
   { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
 } ;
 
-void glutSolidSierpinskiSponge ( int num_levels, GLdouble offset[3], GLdouble scale )
+void glutWireSierpinskiSponge ( int num_levels, GLdouble offset[3], GLdouble scale )
 {
   int i, j ;
 
-  //FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutSolidSierpinskiSponge" );
+  //FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutWireSierpinskiSponge" );
 
   if ( num_levels <= 0 )
   {
     if (num_levels<0){num_levels=0;p[N_ETAPAS]=0;}
-    glBegin ( GL_TRIANGLES ) ;
-
     for ( i = 0 ; i < NUM_TETR_FACES ; i++ )
     {
+      glBegin ( GL_LINE_LOOP ) ;
       glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
-      glColor3f(Cor[(i+4)%8][0],Cor[(i+4)%8][1],Cor[(i+4)%8][2]);
       for ( j = 0; j < 3; j++ )
       {
         double x = offset[0] + scale * tet_r[tet_i[i][j]][0] ;
         double y = offset[1] + scale * tet_r[tet_i[i][j]][1] ;
-        double z = offset[2] + scale * tet_r[tet_i[i][j]][2] ;        
+        double z = offset[2] + scale * tet_r[tet_i[i][j]][2] ;
         glVertex3d ( x, y, z ) ;
       }
-    }
 
-    glEnd () ;
+      glEnd () ;
+    }
   }
   else
   {
@@ -113,7 +111,7 @@ void glutSolidSierpinskiSponge ( int num_levels, GLdouble offset[3], GLdouble sc
       local_offset[0] = offset[0] + scale * tet_r[i][0] ;
       local_offset[1] = offset[1] + scale * tet_r[i][1] ;
       local_offset[2] = offset[2] + scale * tet_r[i][2] ;
-      glutSolidSierpinskiSponge ( num_levels, local_offset, scale ) ;
+      glutWireSierpinskiSponge ( num_levels, local_offset, scale ) ;
     }
   }
 }
@@ -136,7 +134,7 @@ void Des_Objeto(int Tipo){
   //F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
   glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
   GLdouble offset[3]={0.0,0.0,0.0};  
-  glutSolidSierpinskiSponge((int) p[N_ETAPAS],offset,1.0);
+  glutWireSierpinskiSponge((int) p[N_ETAPAS],offset,1.0);
   break;
 
  }
@@ -178,9 +176,7 @@ void Exibe(){
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }   
-  glDisable (GL_LIGHTING);
   Des_Objeto(1);
-  glEnable (GL_LIGHTING);
   
   Des_Objeto(2);
   
@@ -204,11 +200,11 @@ Exemplos:
  Cor do fundo de tela;
  Modelos de Iluminação.
  */ 
-    GLfloat ambiente[]={0.1, 0.0, 0.2, 1.0};
-    GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
-    GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
-    GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
-    GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};
+ /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
+ GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
+ GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
+ GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
+ GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
 
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
@@ -222,17 +218,6 @@ Exemplos:
                0.1*Cor[C_CIANO][2],0);
     glEnable (GL_DEPTH_TEST);//Testa os objetos, decidindo qual está na frente.
     
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambiente);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, difusa);
-    glLightfv(GL_LIGHT0, GL_POSITION, posicao);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, especular);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodelo_ambiente);
-    
-    glShadeModel(GL_FLAT);
-    glEnable (GL_LIGHTING);
-    glEnable (GL_LIGHT0);
-    glEnable (GL_COLOR_MATERIAL);
-  
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   switch (tipo_proj){

@@ -1,5 +1,5 @@
 [Project]
-FileName=SIERPI~1.DEV
+FileName=Sierpinski3d.dev
 Name=Projeto1
 UnitCount=1
 Type=0
@@ -7,25 +7,25 @@ Ver=1
 ObjFiles=
 Includes=
 Libs=
-PrivateResource=SIERPI~1_private.rc
+PrivateResource=
 ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
 Linker=-lopengl32_@@_-lglut32_@@_-lglu32_@@__@@_
 IsCpp=1
-Icon=SIERPI~1.ico
+Icon=Sierpinski3d.ico
 ExeOutput=
 ObjectOutput=
-OverrideOutput=1
-OverrideOutputName=Sierpinski3d.exe
+OverrideOutput=0
+OverrideOutputName=
 HostApplication=
 Folders=
 CommandLine=
 IncludeVersionInfo=1
 SupportXPThemes=1
 CompilerSet=0
-CompilerSettings=000000000000000000
+CompilerSettings=
 
 [Unit1]
 FileName=Objetos.cpp
