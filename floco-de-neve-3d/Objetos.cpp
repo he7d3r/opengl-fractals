@@ -61,23 +61,18 @@ const int TAM=2;
 const int N_ETAPAS=3;
 
 const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,2};
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,1};
 GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
 
 #define NUM_TETR_FACES 4
+
 static GLdouble tet_r[4][3] =
-{ {             1.0,             0.0,             0.0 },
-  { -0.333333333333,  0.942809041582,             0.0 },
-  { -0.333333333333, -0.471404520791,  0.816496580928 },
-  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;
+{ {             1.0,             0.0,             0.0 },//v0
+  { -0.333333333333,  0.942809041582,             0.0 },//v1
+  { -0.333333333333, -0.471404520791,  0.816496580928 },//v2
+  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;//v3
      
 
-//static GLdouble tet_r[4][3] =
-//{ {  0.577350269189,             0.0,             0.0 },//vertice A
-//  { -0.288675134594,             0.5,             0.0 },//vertice B
-//  { -0.288675134594,            -0.5,             0.0 },//vertice C
-//  {             0.0,             0.0,  0.816496580927 } } ;//vertice D
-  
 static GLint tet_i[NUM_TETR_FACES][3] =  /* Vertex indices */
 {
 //  { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
@@ -91,24 +86,7 @@ void WireFlocoDeNeve ( int num_levels)
 {
   int i, j ;
 
-//  if ( num_levels <= 0 ){
-//    if (num_levels<0){num_levels=0;p[N_ETAPAS]=0;}
-//    for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
-//      glBegin ( GL_LINE_LOOP ) ;
-//      glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
-//      for ( j = 0; j < 3; j++ ){
-////        double x = face[0] + scale * tet_r[tet_i[i][j]][0] ;
-////        double y = face[1] + scale * tet_r[tet_i[i][j]][1] ;
-////        double z = face[2] + scale * tet_r[tet_i[i][j]][2] ;
-//        double x = tet_r[ tet_i[i][j] ][0] ;
-//        double y = tet_r[ tet_i[i][j] ][1] ;
-//        double z = tet_r[ tet_i[i][j] ][2] ;
-//        glVertex3d ( x, y, z ) ;
-//      }
-//      glEnd () ;
-//    }
-//  }
-//  else{
+
 //Calcular o produto vetorial de z e z';
 //Calcular o angulo theta entre z e z';
 //Escalar o sistema na razão adequada;
@@ -137,15 +115,7 @@ void WireFlocoDeNeve ( int num_levels)
    glPopMatrix();
    }
  }
-//
-//    num_levels -- ;  scale /= 2.0 ;
-//    for ( i = 0 ; i < 3 ; i++ ){
-//      local_face = {{scale*tet_r[i][0], scale*tet_r[i][1], scale*tet_r[i][2]},
-//                    {face[0]+scale*tet_r[i][0], face[1]+scale*tet_r[i][1], face[2] + scale*tet_r[i][2]},
-//                    {face[0]+scale*tet_r[i][0], face[1]+scale*tet_r[i][1], face[2] + scale*tet_r[i][2]}};
-//      WireFlocoDeNeve ( num_levels, local_face, scale ) ;
-//    }
-//  }
+
 }
 
 void Des_Objeto(int Tipo){
@@ -171,6 +141,16 @@ void Des_Objeto(int Tipo){
 //           { tet_r[tet_i[2][2]][0], tet_r[tet_i[2][2]][1], tet_r[tet_i[2][2]][2]}} ; 
                         
   WireFlocoDeNeve((int) p[N_ETAPAS]);
+  break;
+  case 3:
+   glBegin(GL_LINES);
+   for(int i=0;i<4;i++){
+     glVertex3d ( tet_r[i][0],
+                  tet_r[i][1],
+                  tet_r[i][2] ) ;
+     glVertex3d (0,0,0);
+   }
+   glEnd();
   break;
  }
  glPopMatrix();
@@ -214,7 +194,7 @@ void Exibe(){
   Des_Objeto(1);
   
   Des_Objeto(2);
-  
+  Des_Objeto(3);
   //glFlush(); 
   glutSwapBuffers();//caso doublebuffered...
  
