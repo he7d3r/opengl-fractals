@@ -61,18 +61,23 @@ const int TAM=2;
 const int N_ETAPAS=3;
 
 const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,1};
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,2};
 GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
 
 #define NUM_TETR_FACES 4
-
 static GLdouble tet_r[4][3] =
-{ {             1.0,             0.0,             0.0 },//v0
-  { -0.333333333333,  0.942809041582,             0.0 },//v1
-  { -0.333333333333, -0.471404520791,  0.816496580928 },//v2
-  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;//v3
+{ {             1.0,             0.0,             0.0 },
+  { -0.333333333333,  0.942809041582,             0.0 },
+  { -0.333333333333, -0.471404520791,  0.816496580928 },
+  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;
      
 
+//static GLdouble tet_r[4][3] =
+//{ {  0.577350269189,             0.0,             0.0 },//vertice A
+//  { -0.288675134594,             0.5,             0.0 },//vertice B
+//  { -0.288675134594,            -0.5,             0.0 },//vertice C
+//  {             0.0,             0.0,  0.816496580927 } } ;//vertice D
+  
 static GLint tet_i[NUM_TETR_FACES][3] =  /* Vertex indices */
 {
 //  { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
@@ -86,15 +91,16 @@ void WireFlocoDeNeve ( int num_levels)
 {
   int i, j ;
 
-
 //Calcular o produto vetorial de z e z';
 //Calcular o angulo theta entre z e z';
 //Escalar o sistema na razão adequada;
 //Rotacionar um angulo theta em torno do produto vetorial;
 //transladar para o local adequado.
   for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
-   glBegin ( GL_LINE_LOOP ) ;
+//   glBegin ( GL_LINE_LOOP ) ;
+   glBegin ( GL_TRIANGLES ) ;
    glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
+   glColor3f(Cor[i+2][0],Cor[i+2][1],Cor[i+2][2]);
    for ( j = 0; j < 3; j++ ){//vértices da face i
      double x = tet_r[ tet_i[i][j] ][0] ;
      double y = tet_r[ tet_i[i][j] ][1] ;
@@ -104,18 +110,18 @@ void WireFlocoDeNeve ( int num_levels)
    glEnd () ;
   }
   if ( num_levels > 0 ){
+       num_levels -- ;  
    for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
    glPushMatrix();
      glRotatef(1.230959417340, tet_r[ tet_i[i][2] ][0]-tet_r[ tet_i[i][1] ][0]
                              , tet_r[ tet_i[i][2] ][1]-tet_r[ tet_i[i][1] ][1]
                              , tet_r[ tet_i[i][2] ][2]-tet_r[ tet_i[i][1] ][2]);
      glTranslatef( -0.5*tet_r[i][0], -0.5*tet_r[i][1], -0.5*tet_r[i][2]);
-     num_levels -- ;  glScalef(-0.5,-0.5,-0.5);
+     glScalef(-0.5,-0.5,-0.5);
      WireFlocoDeNeve ( num_levels) ;
    glPopMatrix();
    }
  }
-
 }
 
 void Des_Objeto(int Tipo){
@@ -141,16 +147,6 @@ void Des_Objeto(int Tipo){
 //           { tet_r[tet_i[2][2]][0], tet_r[tet_i[2][2]][1], tet_r[tet_i[2][2]][2]}} ; 
                         
   WireFlocoDeNeve((int) p[N_ETAPAS]);
-  break;
-  case 3:
-   glBegin(GL_LINES);
-   for(int i=0;i<4;i++){
-     glVertex3d ( tet_r[i][0],
-                  tet_r[i][1],
-                  tet_r[i][2] ) ;
-     glVertex3d (0,0,0);
-   }
-   glEnd();
   break;
  }
  glPopMatrix();
@@ -194,7 +190,7 @@ void Exibe(){
   Des_Objeto(1);
   
   Des_Objeto(2);
-  Des_Objeto(3);
+  
   //glFlush(); 
   glutSwapBuffers();//caso doublebuffered...
  
@@ -215,11 +211,11 @@ Exemplos:
  Cor do fundo de tela;
  Modelos de Iluminação.
  */ 
- /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
+ GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
  GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
  GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
  GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
- GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
+ GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};
 
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
@@ -233,6 +229,17 @@ Exemplos:
                0.1*Cor[C_CIANO][2],0);
   glLineWidth(2.0);
     glEnable (GL_DEPTH_TEST);//Testa os objetos, decidindo qual está na frente.
+  
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambiente);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, difusa);
+    glLightfv(GL_LIGHT0, GL_POSITION, posicao);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, especular);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodelo_ambiente);
+    
+    glShadeModel(GL_FLAT);
+    glEnable (GL_LIGHTING);
+    glEnable (GL_LIGHT0);
+    glEnable (GL_COLOR_MATERIAL);
     
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
