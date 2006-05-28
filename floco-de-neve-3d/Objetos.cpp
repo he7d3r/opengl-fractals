@@ -13,7 +13,6 @@ int tipo_proj = PROJ_PERS;
 
 //Outras constantes
 const GLfloat DEG     = M_PI/180;
-const GLfloat VEL_MOV = 1.0;
 
 //Parametros para alterar a projeção
 GLdouble pr_c_x        =   0.0;//    Este centro é
@@ -43,7 +42,8 @@ const int C_VIOLETA  = C_VERMELHO+C_AZUL;
 const int C_CIANO    = C_VERDE+C_AZUL;
 const int C_BRANCO   = C_VERMELHO+C_VERDE+C_AZUL;
 GLfloat Brilho=1.0;
-GLfloat Cor[8][3]={
+#define NUM_CORES 8
+GLfloat Cor[NUM_CORES][3]={
 {  0.0*Brilho,  0.0*Brilho,  0.0*Brilho}, //[0]-Preto
 {  1.0*Brilho,  0.0*Brilho,  0.0*Brilho}, //(1)-Vermelho
 {  0.0*Brilho,  1.0*Brilho,  0.0*Brilho}, //(2)-Verde
@@ -59,12 +59,14 @@ const int INC=0;
 const int DIST=1;
 const int TAM=2;
 const int N_ETAPAS=3;
+const int VEL_MOV=4;
 
-const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,2};
-GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
+const int MAX_PARAM=5;//número de constantes logo acima
+const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,1.5,2,0.2};
+GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3],reset[4]};
 
 #define NUM_TETR_FACES 4
+#define NUM_TETR_ARESTAS 6
 static GLdouble tet_r[4][3] =
 { {             1.0,             0.0,             0.0 },
   { -0.333333333333,  0.942809041582,             0.0 },
@@ -78,29 +80,26 @@ static GLdouble tet_r[4][3] =
 //  { -0.288675134594,            -0.5,             0.0 },//vertice C
 //  {             0.0,             0.0,  0.816496580927 } } ;//vertice D
   
-static GLint tet_i[NUM_TETR_FACES][3] =  /* Vertex indices */
+static GLint tet_i[NUM_TETR_FACES][3] = 
 {
 //  { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
   { 1, 3, 2 }, { 2, 3, 0 }, { 3, 1, 0 }, { 0, 1, 2 }
 } ;
+static GLint aresta[NUM_TETR_ARESTAS][2] =
+{
+  { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 2 }, { 2, 3 }, { 3, 1 }
+} ;
 
-void WireFlocoDeNeve ( int num_levels)
+void WireFlocoDeNeve ( int num_levels, int ignore)
 //cada nivel deve fazer o desenho de um tetraedro (sem base) sobre cada face
 //um nível (o primeiro ou o último) fará o contorno do primeiro tetraedro
 
 {
   int i, j ;
-
-//Calcular o produto vetorial de z e z';
-//Calcular o angulo theta entre z e z';
-//Escalar o sistema na razão adequada;
-//Rotacionar um angulo theta em torno do produto vetorial;
-//transladar para o local adequado.
-  for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
-//   glBegin ( GL_LINE_LOOP ) ;
+  /*for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
    glBegin ( GL_TRIANGLES ) ;
    glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
-   glColor3f(Cor[i+2][0],Cor[i+2][1],Cor[i+2][2]);
+   glColor3f(Cor[i+1][0],Cor[i+1][1],Cor[i+1][2]);
    for ( j = 0; j < 3; j++ ){//vértices da face i
      double x = tet_r[ tet_i[i][j] ][0] ;
      double y = tet_r[ tet_i[i][j] ][1] ;
@@ -108,19 +107,31 @@ void WireFlocoDeNeve ( int num_levels)
      glVertex3d ( x, y, z ) ;//coordenadas do vértice j na face i
    }
    glEnd () ;
-  }
-  if ( num_levels > 0 ){
-       num_levels -- ;  
-   for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
-   glPushMatrix();
-     glRotatef(1.230959417340, tet_r[ tet_i[i][2] ][0]-tet_r[ tet_i[i][1] ][0]
-                             , tet_r[ tet_i[i][2] ][1]-tet_r[ tet_i[i][1] ][1]
-                             , tet_r[ tet_i[i][2] ][2]-tet_r[ tet_i[i][1] ][2]);
-     glTranslatef( -0.5*tet_r[i][0], -0.5*tet_r[i][1], -0.5*tet_r[i][2]);
-     glScalef(-0.5,-0.5,-0.5);
-     WireFlocoDeNeve ( num_levels) ;
-   glPopMatrix();
+  }*/
+  
+  for ( i = 0 ; i < NUM_TETR_ARESTAS ; i++ ){
+   glBegin ( GL_LINES ) ;
+   glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
+   glColor3f(Cor[(i+1)%NUM_CORES][0],Cor[(i+1)%NUM_CORES][1],Cor[(i+1)%NUM_CORES][2]);
+   for ( j = 0; j < 2; j++ ){//vértices da aresta i
+     double x = tet_r[ aresta[i][j] ][0] ;
+     double y = tet_r[ aresta[i][j] ][1] ;
+     double z = tet_r[ aresta[i][j] ][2] ;
+     glVertex3d ( x, y, z ) ;//coordenadas do vértice j na aresta i
    }
+   glEnd () ; 
+  }
+  
+  if ( num_levels > 0 ){
+   num_levels -- ;  
+   for ( i = 0 ; i < NUM_TETR_FACES ; i++ ){
+   if (i!=ignore){
+     glPushMatrix();
+       glTranslatef( -0.5*tet_r[i][0], -0.5*tet_r[i][1], -0.5*tet_r[i][2]);
+       glScalef(-0.5,-0.5,-0.5);            
+       WireFlocoDeNeve ( num_levels, i) ;
+     glPopMatrix();
+   }}
  }
 }
 
@@ -145,8 +156,8 @@ void Des_Objeto(int Tipo){
 //           { tet_r[tet_i[2][0]][0], tet_r[tet_i[2][0]][1], tet_r[tet_i[2][0]][2]},
 //           { tet_r[tet_i[2][1]][0], tet_r[tet_i[2][1]][1], tet_r[tet_i[2][1]][2]},
 //           { tet_r[tet_i[2][2]][0], tet_r[tet_i[2][2]][1], tet_r[tet_i[2][2]][2]}} ; 
-                        
-  WireFlocoDeNeve((int) p[N_ETAPAS]);
+  int nenhum=-1;                      
+  WireFlocoDeNeve((int) p[N_ETAPAS], nenhum);
   break;
  }
  glPopMatrix();
@@ -304,6 +315,12 @@ void Teclado(unsigned char key, int x, int y)
  }
 }
 
+void spinDisplay(void)
+{
+pr_cam_theta -= p[VEL_MOV]/10;
+glutPostRedisplay();
+}
+
 void Mouse_click(int b,int state,int x, int y)
 {
  botao_mouse=b;
@@ -313,15 +330,16 @@ void Mouse_click(int b,int state,int x, int y)
     case GLUT_DOWN:     
      xb = x;
      yb = y;
+     glutIdleFunc(NULL);
      break;
     case GLUT_UP:
      botao_mouse=-1;
      switch (tipo_proj){
      case PROJ_PERS:
-      pr_cam_theta -= VEL_MOV*(xm - xb);
+      pr_cam_theta -= p[VEL_MOV]*(xm - xb);
        if  (pr_cam_theta>180) pr_cam_theta-=360;
        if (-pr_cam_theta>180) pr_cam_theta+=360;
-      pr_cam_phi   -= VEL_MOV*(ym - yb);  
+      pr_cam_phi   -= p[VEL_MOV]*(ym - yb);  
        if  (pr_cam_phi>180){pr_cam_phi-=360; pr_direc_z = -1.0;}
        if (-pr_cam_phi>180){pr_cam_phi+=360; pr_direc_z = 1.0;}
        
@@ -329,27 +347,30 @@ void Mouse_click(int b,int state,int x, int y)
        if (pr_cam_phi==0) pr_cam_phi=0.0001*pr_direc_z;
       break;
      case PROJ_ORTO:
-      pr_orto_z2 += VEL_MOV*(xm - xb);//theta
-      pr_orto_y1 -= VEL_MOV*(ym - yb);//phi
+      pr_orto_z2 += p[VEL_MOV]*(xm - xb);//theta
+      pr_orto_y1 -= p[VEL_MOV]*(ym - yb);//phi
       break;
      }
     break;
   }//switch (state)
   break;
  case GLUT_RIGHT_BUTTON:
+   if (state == GLUT_DOWN)
+    glutIdleFunc(spinDisplay);
   break;
  }//switch (b)
 }
 void Mouse_mov(int x, int y)
 {
+    
  if (botao_mouse!=GLUT_LEFT_BUTTON) return;
  xm = x;
  ym = y;
  switch (tipo_proj){
  case PROJ_PERS:
 
-  pr_cam_theta -= VEL_MOV*(xm - xb);
-  pr_cam_phi   -= VEL_MOV*(ym - yb);
+  pr_cam_theta -= p[VEL_MOV]*(xm - xb);
+  pr_cam_phi   -= p[VEL_MOV]*(ym - yb);
   if  (pr_cam_phi>180){pr_cam_phi-=360; pr_direc_z = -1.0;}
   if (-pr_cam_phi>180){pr_cam_phi+=360; pr_direc_z = 1.0;}
   if (pr_cam_phi*pr_direc_z<0) pr_direc_z = -pr_direc_z;
@@ -357,21 +378,22 @@ void Mouse_mov(int x, int y)
 
   Exibe();//glutPostRedisplay();
   
-  pr_cam_theta += VEL_MOV*(xm - xb);
-  pr_cam_phi   += VEL_MOV*(ym - yb);
+  pr_cam_theta += p[VEL_MOV]*(xm - xb);
+  pr_cam_phi   += p[VEL_MOV]*(ym - yb);
   
   break;
  case PROJ_ORTO:
-  pr_orto_z2 += VEL_MOV*(xm - xb);//theta
-  pr_orto_y1 -= VEL_MOV*(ym - yb);//phi
+  pr_orto_z2 += p[VEL_MOV]*(xm - xb);//theta
+  pr_orto_y1 -= p[VEL_MOV]*(ym - yb);//phi
   
   Exibe();
   
-  pr_orto_z2 -= VEL_MOV*(xm - xb);//theta
-  pr_orto_y1 += VEL_MOV*(ym - yb);//phi
+  pr_orto_z2 -= p[VEL_MOV]*(xm - xb);//theta
+  pr_orto_y1 += p[VEL_MOV]*(ym - yb);//phi
   break;
  }
 }
+
 int main(int argc, char **argv)
 {
    glutInit(&argc,argv);
@@ -380,6 +402,7 @@ int main(int argc, char **argv)
    glutInitWindowSize(700,700);
    glutInitWindowPosition(0,0);
    glutCreateWindow("Floco de Neve 3d");
+   //glutIdleFunc( spinDisplay );
    //glutFullScreen();
    
    Ini();
