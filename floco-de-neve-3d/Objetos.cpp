@@ -240,7 +240,7 @@ Exemplos:
                0.1*Cor[C_CIANO][2],0);
   glLineWidth(2.0);
     glEnable (GL_DEPTH_TEST);//Testa os objetos, decidindo qual está na frente.
-  
+ /* 
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambiente);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, difusa);
     glLightfv(GL_LIGHT0, GL_POSITION, posicao);
@@ -251,7 +251,7 @@ Exemplos:
     glEnable (GL_LIGHTING);
     glEnable (GL_LIGHT0);
     glEnable (GL_COLOR_MATERIAL);
-    
+ */   
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   switch (tipo_proj){
