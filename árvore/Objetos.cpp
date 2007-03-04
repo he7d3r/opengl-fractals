@@ -105,8 +105,7 @@ void Desenha_galhos(GLfloat n){
     glBegin(GL_LINES);
      glVertex3f(0.0,0.0,0.0);
      glVertex3f(0.0,0.0,r*p[RED]);
-    glEnd();
-    
+    glEnd();    
     
     
     Desenha_galhos(n-1);
@@ -152,11 +151,6 @@ void Exibe(){
  const GLdouble CAM_Z = pr_c_z + p[DIST] * cos(PHI);
  GLdouble prof=(pr_pers_prox+pr_pers_dist)/2;
  
- /*GLfloat espec[]={0.5, 0.5, 0.5, 1.0};
- GLfloat emi[]={0.3, 0.6, 0.0, 0.0};
- GLfloat emi2[]={0.5, 0.0, 0.3, 0.0};
- GLfloat emi3[]={0.0, 0.0, 0.2, 0.0};*/
- 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); 
   
   switch (tipo_proj){
@@ -186,28 +180,9 @@ void Exibe(){
   glutSwapBuffers();//caso doublebuffered...
  
 }
-/*void Redimensiona(int alt, int larg){
- glViewport (0, 0, (GLsizei) larg, (GLsizei) alt); 
- glMatrixMode(GL_MODELVIEW);
- glLoadIdentity();
- pr_pers_aspec=(GLsizei) larg/(GLsizei) alt;
- gluPerspective (pr_pers_ang, pr_pers_aspec, pr_pers_prox, pr_pers_dist);
-}*/
 
 void Ini()
-{/*Defina aqui os valores iniciais dos parâmetros mais importantes.
-Exemplos:
- Tipo de projeção;
- Ponto de vista;
- Cor do fundo de tela;
- Modelos de Iluminação.
- */ 
- /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
- GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
- GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
- GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
- GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
-
+{
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
  const GLdouble CAM_X = pr_c_x + p[DIST] * sin(PHI) * cos(THETA);
@@ -241,7 +216,7 @@ Exemplos:
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-  //quad=gluNewQuadric(); 
+
 }
 void Teclado(unsigned char key, int x, int y)
 {
