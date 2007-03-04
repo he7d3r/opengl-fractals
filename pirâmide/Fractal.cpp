@@ -1,5 +1,5 @@
 #include <windows.h>
-#include <gl\glut.h>//As linhas 58 e 59 do 'glut.h' incluem 'gl.h' e 'glu.h'
+#include "gl\glut.h"//As linhas 58 e 59 do 'glut.h' incluem 'gl.h' e 'glu.h'
 #include <stdio.h>
 #include <math.h>
 
@@ -9,7 +9,7 @@
 //Tipo de projeção
 const int PROJ_ORTO = 1;
 const int PROJ_PERS = 2;
-int tipo_proj = PROJ_PERS;
+int tipo_proj = 2;
 
 //Outras constantes
 const GLfloat DEG     = M_PI/180;
@@ -23,7 +23,7 @@ GLdouble pr_orto_z1    =  90.0;
 GLdouble pr_orto_y1    =  45.0;
 GLdouble pr_orto_z2    = 135.0;
 GLdouble pr_pers_ang   =  50.0;
-GLdouble pr_pers_prox  =   0.1;
+GLdouble pr_pers_prox  =   1.0;
 GLdouble pr_pers_dist  = 100.0;
 GLdouble pr_pers_aspec =   1.0;
 GLdouble pr_cam_dist   =   5.0;//coordenadas esféricas//
@@ -54,89 +54,61 @@ GLfloat Cor[8][3]={
 {  1.0*Brilho,  1.0*Brilho,  1.0*Brilho}  //[7]-Branco
 };
 
-//Deste ponto em diante, modifique de acordo com o projeto atual
+const int MAX_PARAM=4;
+
 const int INC=0;
 const int DIST=1;
-const int TAM=2;
-const int N_ETAPAS=3;
+const int RAZAO=2;
+const int POS=3;
 
-const int MAX_PARAM=4;//número de constantes logo acima
-const GLfloat reset[MAX_PARAM]={1,pr_cam_dist,0.01,7};
-GLfloat p[MAX_PARAM]={reset[0],reset[1],reset[2],reset[3]};
+const GLfloat reset[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
+GLfloat p[MAX_PARAM]={0.1,pr_cam_dist,0.5,1.0};
 
-#define NUM_TETR_FACES     4
+const int MAX_SORT=100000; 
+const int MAX_VERT=4;
+int v_sort[MAX_SORT];
 
-static GLdouble tet_r[4][3] =
-{ {             1.0,             0.0,             0.0 },
-  { -0.333333333333,  0.942809041582,             0.0 },
-  { -0.333333333333, -0.471404520791,  0.816496580928 },
-  { -0.333333333333, -0.471404520791, -0.816496580928 } } ;
+void Sorteia_pontos (){
+ for (int c=0;c<MAX_SORT;c++)
+  v_sort[c]=(int)rand()%MAX_VERT;
+}
 
-static GLint tet_i[4][3] =  /* Vertex indices */
-{
-  { 1, 3, 2 }, { 0, 2, 3 }, { 0, 3, 1 }, { 0, 1, 2 }
-} ;
+void Des_PontosAleatorios(){ 
+ int c;
+ GLfloat ult[3]={0.5,0.5,0.5};
+ GLfloat v[4][3]={{0,0,0},{1,0,0},{0,1,0},{1-p[POS],1-p[POS],p[POS]}};
 
-void glutWireSierpinskiSponge ( int num_levels, GLdouble offset[3], GLdouble scale )
-{
-  int i, j ;
-
-  //FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutWireSierpinskiSponge" );
-
-  if ( num_levels <= 0 )
-  {
-    if (num_levels<0){num_levels=0;p[N_ETAPAS]=0;}
-    for ( i = 0 ; i < NUM_TETR_FACES ; i++ )
-    {
-      glBegin ( GL_LINE_LOOP ) ;
-      glNormal3d ( -tet_r[i][0], -tet_r[i][1], -tet_r[i][2] ) ;
-      for ( j = 0; j < 3; j++ )
-      {
-        double x = offset[0] + scale * tet_r[tet_i[i][j]][0] ;
-        double y = offset[1] + scale * tet_r[tet_i[i][j]][1] ;
-        double z = offset[2] + scale * tet_r[tet_i[i][j]][2] ;
-        glVertex3d ( x, y, z ) ;
-      }
-
-      glEnd () ;
-    }
+ glBegin(GL_POINTS);
+ for (c=0;c<MAX_SORT;c++){ 
+  if (v_sort[c]!=v_sort[c-1]){ 
+   glColor3f(Cor[1+v_sort[c]][0], Cor[1+v_sort[c]][1], Cor[1+v_sort[c]][2]);
   }
-  else
-  {
-    GLdouble local_offset[3] ;  /* Use a local variable to avoid buildup of roundoff errors */
-    num_levels -- ;
-    scale /= 2.0 ;
-    for ( i = 0 ; i < NUM_TETR_FACES ; i++ )
-    {
-      local_offset[0] = offset[0] + scale * tet_r[i][0] ;
-      local_offset[1] = offset[1] + scale * tet_r[i][1] ;
-      local_offset[2] = offset[2] + scale * tet_r[i][2] ;
-      glutWireSierpinskiSponge ( num_levels, local_offset, scale ) ;
-    }
-  }
+  ult[0]+=p[RAZAO]*(v[v_sort[c]][0] - ult[0]);
+  ult[1]+=p[RAZAO]*(v[v_sort[c]][1] - ult[1]);
+  ult[2]+=p[RAZAO]*(v[v_sort[c]][2] - ult[2]);
+  glVertex3f(ult[0], ult[1], ult[2]);  
+ }
+ glEnd();
 }
 void Des_Objeto(int Tipo){
  glPushMatrix();
  switch (Tipo){
  case 1:
-  //glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-  //glTranslatef(0.5, 0.5, 0.0);
   glBegin(GL_LINES);
-   glColor3f(1.0,0.0,0.0);//x
+   glColor3f(Cor[C_VERMELHO][0],Cor[C_VERMELHO][1],Cor[C_VERMELHO][2]);//x
      glVertex3f(0.0,0.0,0.0); glVertex3f(2,0.0,0.0);
-   glColor3f(0.0,1.0,0.0);//y
+   glColor3f(Cor[C_VERDE][0],Cor[C_VERDE][1],Cor[C_VERDE][2]);//y
      glVertex3f(0.0,0.0,0.0); glVertex3f(0.0,2,0.0);
-   glColor3f(0.0,0.0,1.0);//z
+   glColor3f(Cor[C_AZUL][0],Cor[C_AZUL][1],Cor[C_AZUL][2]);//z
      glVertex3f(0.0,0.0,0.0); glVertex3f(0.0,0.0,2);
-  glEnd();
+  glEnd(); 
   break;
  case 2: 
-  //F[0][0][0]=F[1][0][0]=F[0][1][0]=F[0][0][1]=F[0][2][0]=1;
-  glColor3f(Cor[C_CIANO][0],Cor[C_CIANO][1],Cor[C_CIANO][2]);
-  GLdouble offset[3]={0.0,0.0,0.0};  
-  glutWireSierpinskiSponge((int) p[N_ETAPAS],offset,1.0);
+  Des_PontosAleatorios();
   break;
-
+ default:
+ 
+  break;
  }
  glPopMatrix();
 }
@@ -149,11 +121,6 @@ void Exibe(){
  const GLdouble CAM_Y = pr_c_y + p[DIST] * sin(PHI) * sin(THETA);
  const GLdouble CAM_Z = pr_c_z + p[DIST] * cos(PHI);
  GLdouble prof=(pr_pers_prox+pr_pers_dist)/2;
- 
- /*GLfloat espec[]={0.5, 0.5, 0.5, 1.0};
- GLfloat emi[]={0.3, 0.6, 0.0, 0.0};
- GLfloat emi2[]={0.5, 0.0, 0.3, 0.0};
- GLfloat emi3[]={0.0, 0.0, 0.2, 0.0};*/
  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); 
   
@@ -175,37 +142,17 @@ void Exibe(){
    glRotatef(pr_orto_z2,0.0,0.0,1.0);
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
-  }   
+  }  
+  
   Des_Objeto(1);
-  
   Des_Objeto(2);
-  
   //glFlush(); 
   glutSwapBuffers();//caso doublebuffered...
  
 }
-/*void Redimensiona(int alt, int larg){
- glViewport (0, 0, (GLsizei) larg, (GLsizei) alt); 
- glMatrixMode(GL_MODELVIEW);
- glLoadIdentity();
- pr_pers_aspec=(GLsizei) larg/(GLsizei) alt;
- gluPerspective (pr_pers_ang, pr_pers_aspec, pr_pers_prox, pr_pers_dist);
-}*/
 
 void Ini()
-{/*Defina aqui os valores iniciais dos parâmetros mais importantes.
-Exemplos:
- Tipo de projeção;
- Ponto de vista;
- Cor do fundo de tela;
- Modelos de Iluminação.
- */ 
- /*GLfloat ambiente[]={0.2, 0.2, 0.2, 1.0};
- GLfloat difusa[]={0.7, 0.7, 0.7, 1.0};
- GLfloat especular[]={1.0, 1.0, 1.0, 1.0};
- GLfloat posicao[]={0.0, 0.0, 2.0, 0.0};
- GLfloat lmodelo_ambiente[]={0.2, 0.2, 0.2, 1.0};*/
-
+{
  const GLdouble PHI=pr_cam_phi*DEG;
  const GLdouble THETA=pr_cam_theta*DEG;
  const GLdouble CAM_X = pr_c_x + p[DIST] * sin(PHI) * cos(THETA);
@@ -239,7 +186,7 @@ Exemplos:
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-  //quad=gluNewQuadric(); 
+  Sorteia_pontos();
 }
 void Teclado(unsigned char key, int x, int y)
 {
@@ -369,3 +316,4 @@ int main(int argc, char **argv)
    glutMainLoop();
  return 0;
 }
+
