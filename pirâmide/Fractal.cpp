@@ -68,8 +68,28 @@ const int MAX_SORT=100000;
 const int MAX_VERT=4;
 int v_sort[MAX_SORT];
 
+void Sorteia_pontos (){
+ for (int c=0;c<MAX_SORT;c++)
+  v_sort[c]=(int)rand()%MAX_VERT;
+}
 
+void Des_PontosAleatorios(){ 
+ int c;
+ GLfloat ult[3]={0.5,0.5,0.5};
+ GLfloat v[4][3]={{0,0,0},{1,0,0},{0,1,0},{1-p[POS],1-p[POS],p[POS]}};
 
+ glBegin(GL_POINTS);
+ for (c=0;c<MAX_SORT;c++){ 
+  if (v_sort[c]!=v_sort[c-1]){ 
+   glColor3f(Cor[1+v_sort[c]][0], Cor[1+v_sort[c]][1], Cor[1+v_sort[c]][2]);
+  }
+  ult[0]+=p[RAZAO]*(v[v_sort[c]][0] - ult[0]);
+  ult[1]+=p[RAZAO]*(v[v_sort[c]][1] - ult[1]);
+  ult[2]+=p[RAZAO]*(v[v_sort[c]][2] - ult[2]);
+  glVertex3f(ult[0], ult[1], ult[2]);  
+ }
+ glEnd();
+}
 void Des_Objeto(int Tipo){
  glPushMatrix();
  switch (Tipo){
@@ -84,11 +104,7 @@ void Des_Objeto(int Tipo){
   glEnd(); 
   break;
  case 2: 
-  glBegin(GL_LINES);
-   glColor3f(1,1,1);
-     glVertex4f(1.0, 3.0, 0.0, 0.0001);
-     glVertex4f(-1.0, -3.0, 0.0, 0.0001);
-  glEnd(); 
+  Des_PontosAleatorios();
   break;
  default:
  
@@ -170,7 +186,7 @@ void Ini()
    glTranslatef(pr_c_x,pr_c_y,pr_c_z);
    break;
   }  
-
+  Sorteia_pontos();
 }
 void Teclado(unsigned char key, int x, int y)
 {
