@@ -24,58 +24,70 @@ A seguir estão reunidas algumas capturas de tela dos programas implementados.
 
 ### Curva de Koch em 2D ###
 
-<img width="150px" src="./aleatório/imagens/screenshot.png" alt='Koch Snowflake'>
+<p float="left">
+<img width="24%" src="./aleatório/imagens/screenshot.png" alt='Koch Snowflake'>
+</p>
 
 ### Árvores ###
 
-<img width="150px" src="./árvore/imagens/árvore 2.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 3div 25g 0,53red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 3div 35g 0,7red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 3.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 4div 60g 0,6red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 4.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 5div 25g 0,95red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 5div 35g 0,3red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 5div 35g 0,75red (2).gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 5div 35g 0,75red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 5div 65g 0,45red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore 6div 25g 0,75red.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore - construção.jpg" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore.jpg" alt='Tree'>
-<img width="150px" src="./árvore/imagens/árvore - Sierpinski.gif" alt='Tree'>
-<img width="150px" src="./árvore/imagens/screenshot.png" alt='Tree'>
-<img width="150px" src="./árvore/imagens/Tapete - Sierpinsk.jpg" alt='Tree'>
-<img width="150px" src="./árvore/imagens/Tri - Sierpinsk.jpg" alt='Tree'>
+<p float="left">
+<img width="24%" src="./árvore/imagens/árvore 2.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 3div 25g 0,53red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 3div 35g 0,7red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 3.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 4div 60g 0,6red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 4.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 5div 25g 0,95red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 5div 35g 0,3red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 5div 35g 0,75red (2).gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 5div 35g 0,75red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 5div 65g 0,45red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore 6div 25g 0,75red.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore - construção.jpg" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore.jpg" alt='Tree'>
+<img width="24%" src="./árvore/imagens/árvore - Sierpinski.gif" alt='Tree'>
+<img width="24%" src="./árvore/imagens/screenshot.png" alt='Tree'>
+<img width="24%" src="./árvore/imagens/Tapete - Sierpinsk.jpg" alt='Tree'>
+<img width="24%" src="./árvore/imagens/Tri - Sierpinsk.jpg" alt='Tree'>
+</p>
 
 ### Esponja de Menger ###
 
-<img width="150px" src="./esponja/imagens/Esponja 3d azul (cubos) 2.jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja 3d azul (cubos).jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja 3d colorida (cubos) 2.jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja 3d colorida (cubos) 3.jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja 3d colorida cubos).jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja 3d peões azuis.jpg" alt='Tree'>
-<img width="150px" src="./esponja/imagens/Esponja.gif" alt='Tree'>
-<img width="150px" src="./esponja/imagens/screenshot.png" alt='Sponge'>
-<img width="150px" src="./esponja/imagens/Sierpinski 3d (8pontos).jpg" alt='Tree'>
+<p float="left">
+<img width="24%" src="./esponja/imagens/Esponja 3d azul (cubos) 2.jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja 3d azul (cubos).jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja 3d colorida (cubos) 2.jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja 3d colorida (cubos) 3.jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja 3d colorida cubos).jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja 3d peões azuis.jpg" alt='Tree'>
+<img width="24%" src="./esponja/imagens/Esponja.gif" alt='Tree'>
+<img width="24%" src="./esponja/imagens/screenshot.png" alt='Sponge'>
+<img width="24%" src="./esponja/imagens/Sierpinski 3d (8pontos).jpg" alt='Tree'>
+</p>
 
 ### Floco de neve de Kock em 3D ###
 
-<img width="150px" src="./floco-de-neve-3d/imagens/screenshot.png" alt='Snowflake 3D'>
+<p float="left">
+<img width="24%" src="./floco-de-neve-3d/imagens/screenshot.png" alt='Snowflake 3D'>
+</p>
 
 ### Pirâmide de Sierpinski ###
 
-<img width="150px" src="./pirâmide/imagens/Fractal - Sierpinski - Arestas.gif" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Fractal - Sierpinski - Peões.gif" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Fractal - Sierpinski - Sólido.gif" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/screenshot.png" alt='Pyramid'>
-<img width="150px" src="./pirâmide/imagens/Sierpinski 3d (pontos).jpg" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Sierpinski 3d (sorteio de pontos).jpg" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Sierpinsk.jpg" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Sierpinsk + resolução.jpg" alt='Tree'>
+<p float="left">
+<img width="24%" src="./pirâmide/imagens/Fractal - Sierpinski - Arestas.gif" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Fractal - Sierpinski - Peões.gif" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Fractal - Sierpinski - Sólido.gif" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/screenshot.png" alt='Pyramid'>
+<img width="24%" src="./pirâmide/imagens/Sierpinski 3d (pontos).jpg" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Sierpinski 3d (sorteio de pontos).jpg" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Sierpinsk.jpg" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Sierpinsk + resolução.jpg" alt='Tree'>
+</p>
 
 ### Poeira de Cantor ###
 
-<img width="150px" src="./pirâmide/imagens/Sierpinski 3d (sorteio de pontos no plano).jpg" alt='Tree'>
-<img width="150px" src="./pirâmide/imagens/Sierpinski 3d (poeira de cantor).jpg" alt='Tree'>
+<p float="left">
+<img width="24%" src="./pirâmide/imagens/Sierpinski 3d (sorteio de pontos no plano).jpg" alt='Tree'>
+<img width="24%" src="./pirâmide/imagens/Sierpinski 3d (poeira de cantor).jpg" alt='Tree'>
+</p>
